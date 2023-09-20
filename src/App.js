@@ -1,25 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+// // App.js
+// import React, { useEffect, useState } from 'react';
+// import { auth } from './Firebase';
+// import LoginPage from './Components/Login';
 
-function App() {
+// import ImageGallery from './Components/ImageGallery';
+
+// function App() {
+//   const [user, setUser] = useState(null);
+
+//   useEffect(() => {
+//     const unsubscribe = auth.onAuthStateChanged((authUser) => {
+//       if (authUser) {
+//         // User is logged in
+//         setUser(authUser);
+//       } else {
+//         // User is logged out
+//         setUser(null);
+//       }
+//     });
+
+//     return () => {
+//       // Unsubscribe from the Firebase observer when the component unmounts
+//       unsubscribe();
+//     };
+//   }, []);
+
+//   return (
+//     <div>
+    
+//       <LoginPage />
+//       {user ? (
+//         <ImageGallery /> // Render the gallery if the user is authenticated
+//       ) : (
+//         <LoginPage /> // Render the login page if the user is not authenticated
+//       )}
+      
+//     </div>
+//   );
+// }
+
+// export default App;
+import React from "react";
+import LoginPage from "./Components/Login";
+import ImageGallery from "./Components/ImageGallery";
+import imageArray from "./Components/img";
+import './App.css'
+
+
+function App () {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+     <ImageGallery />
     </div>
-  );
+  )
+
 }
 
 export default App;
