@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import img1 from '../images/14658084_5506971-removebg-preview.png';
@@ -68,7 +68,7 @@ const ImageCard = ({ image, index, moveImage }) => {
   });
 
   return (
-    <div ref={(node) => ref(drop(node))} className="image-card">
+    <div ref={(node) => ref(drop(node))} className="image-card ">
       
       <img src={image.url} alt={`Image ${image.id}`} />
       <div className="tags">
@@ -84,6 +84,7 @@ const ImageCard = ({ image, index, moveImage }) => {
 
 const ImageGallery = () => {
   const [images, setImages] = useState(initialImages);
+  const [loading, setLoading] = useState(true);
 
   const moveImage = (fromIndex, toIndex) => {
     const updatedImages = [...images];
@@ -102,11 +103,30 @@ const ImageGallery = () => {
     });
     setImages(filtered);
   };
+  useEffect(() => {
+    // Simulate an API call or any asynchronous operation to fetch images
+    // For this example, we use a setTimeout to simulate loading delay
+    const fakeApiCall = () => {
+      setTimeout(() => {
+        setLoading(false); // Set loading to false when images are ready
+      }, 2000); // Simulate a 2-second loading time
+    };
 
+    // Call the fake API
+    fakeApiCall();
+  }, []); // Empty dependency array ensures this effect runs only once
   return (
     <DndProvider backend={HTML5Backend}>
-      <div>
-        <SearchBar onSearch={handleSearch} />
+    <div>
+      <SearchBar onSearch={handleSearch} />
+      {loading ? (
+        // Show a skeleton loader or loading spinner while images are loading
+        <div className="loading-spinner">
+          {/* You can replace this with your preferred loading indicator */}
+          Loading...
+        </div>
+      ) : (
+        // Display the image gallery when loading is false
         <div className="image-gallery">
           {images.map((image, index) => (
             <ImageCard
@@ -117,8 +137,9 @@ const ImageGallery = () => {
             />
           ))}
         </div>
-      </div>
-    </DndProvider>
+      )}
+    </div>
+  </DndProvider>
   );
 };
 
