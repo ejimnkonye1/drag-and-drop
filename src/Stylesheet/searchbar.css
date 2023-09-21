@@ -5,6 +5,8 @@
     align-items: center;
     max-width: 400px; /* Limit the width on larger screens */
     margin: 0 auto; /* Center the search bar horizontally */
+    margin-top: 40px;
+    
   }
   
   input[type="text"] {

@@ -14,47 +14,55 @@ const initialImages = [
   {
     id: '1',
     url: img1,
-    tags: ['tag1',],
+    tags: ['tag1'],
   },
   {
     id: '2',
     url: img2,
-    tags: ['tag2',],
+    tags: ['tag2'],
   },
   {
     id: '3',
     url: img3,
-    tags: ['tag3',],
+    tags: ['tag3'],
   },
   {
     id: '4',
     url: img4,
-    tags: ['tag4',],
+    tags: ['tag4'],
   },
   {
     id: '5',
     url: img5,
-    tags: ['tag5',],
+    tags: ['tag5'],
   },
   {
     id: '6',
     url: img6,
-    tags: ['tag6',],
+    tags: ['tag6'],
   },
 ];
 
 const ImageCard = ({ image, index, moveImage }) => {
+  const handleTouchStart = (event) => {
+    // Handle touch start event
+    console.log('Touch start:', event.touches);
+  };
+
+  const handleTouchMove = (event) => {
+    // Handle touch move event
+    console.log('Touch move:', event.touches);
+  };
+
+  const handleTouchEnd = (event) => {
+    // Handle touch end event
+    console.log('Touch end:', event.changedTouches);
+  };
+
   const [, ref] = useDrag({
     type: 'IMAGE',
     item: { index },
-    onTouchStart: (e) => {
-      // Store the initial touch position
-      const touchX = e.touches[0].clientX;
-      const touchY = e.touches[0].clientY;
-      // You can store these values in state if needed
-
-      // Handle any other touch start logic here
-    },
+    onTouchStart: handleTouchStart, // Add touch start event handler
   });
 
   const [, drop] = useDrop({
@@ -68,8 +76,15 @@ const ImageCard = ({ image, index, moveImage }) => {
   });
 
   return (
-    <div ref={(node) => ref(drop(node))} className="image-card ">
-      
+    <div
+      ref={(node) => {
+        ref(drop(node));
+        node?.addEventListener('touchstart', handleTouchStart);
+        node?.addEventListener('touchmove', handleTouchMove);
+        node?.addEventListener('touchend', handleTouchEnd);
+      }}
+      className="image-card"
+    >
       <img src={image.url} alt={`Image ${image.id}`} />
       <div className="tags">
         {image.tags.map((tag, tagIndex) => (
@@ -103,6 +118,7 @@ const ImageGallery = () => {
     });
     setImages(filtered);
   };
+
   useEffect(() => {
     // Simulate an API call or any asynchronous operation to fetch images
     // For this example, we use a setTimeout to simulate loading delay
@@ -115,31 +131,32 @@ const ImageGallery = () => {
     // Call the fake API
     fakeApiCall();
   }, []); // Empty dependency array ensures this effect runs only once
+
   return (
     <DndProvider backend={HTML5Backend}>
-    <div>
-      <SearchBar onSearch={handleSearch} />
-      {loading ? (
-        // Show a skeleton loader or loading spinner while images are loading
-        <div className="loading-spinner">
-          {/* You can replace this with your preferred loading indicator */}
-          Loading...
-        </div>
-      ) : (
-        // Display the image gallery when loading is false
-        <div className="image-gallery">
-          {images.map((image, index) => (
-            <ImageCard
-              key={image.id}
-              image={image}
-              index={index}
-              moveImage={moveImage}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  </DndProvider>
+      <div>
+        <SearchBar onSearch={handleSearch} />
+        {loading ? (
+          // Show a skeleton loader or loading spinner while images are loading
+          <div className="loading-spinner">
+            {/* You can replace this with your preferred loading indicator */}
+            Loading...
+          </div>
+        ) : (
+          // Display the image gallery when loading is false
+          <div className="image-gallery">
+            {images.map((image, index) => (
+              <ImageCard
+                key={image.id}
+                image={image}
+                index={index}
+                moveImage={moveImage}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </DndProvider>
   );
 };
 
