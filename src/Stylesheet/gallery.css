@@ -54,29 +54,3 @@
     background-position: -200% 0;
   }
 }
-
-
-/* Add more styles as needed */
-
-/* ImageGallery.css */
-
-/* Skeleton loader style */
-.skeleton-loader {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 8px;
-  height: 200px; /* Adjust the height to match your image card size */
-  width: 100%;
-  margin-bottom: 16px;
-}
-
-@keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
