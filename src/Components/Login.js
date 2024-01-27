@@ -3,48 +3,66 @@ import '../Stylesheet/Login.css';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../Firebase';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function LoginPage() {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [signInError, setSignInError] = useState(null);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [register, setRegister] = useState('')
   const navigate = useNavigate();
 
-  const login = async () => {
-    try {
-      setSignInError(null); // Clear any previous sign-in errors
-      
-      // Check if the user provided the default credentials
-      if (loginEmail === 'user@example.com' && loginPassword === '1Password') {
-        // Simulate a successful login without Firebase Authentication
-        // You can perform additional actions or redirect the user here
-        console.log("Login successful using default credentials");
-        window.alert("Login successful using default credentials");
-        navigate('/image-gallery');
-      } else {
-        // If the provided credentials are not the default, attempt Firebase login
-        const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-        // Display a success message using alert
-        window.alert("Login successful!");
-        console.log("Logged in user:", userCredential.user);
-        navigate('/image-gallery');
-      }
-    } catch (error) {
-      console.log(error.code, error.message);
-      // Display an error message using alert
-      window.alert("Login unsuccessful. Please check your email and password.");
-      setSignInError(error.message); // Set the error message for display in the UI
-    }
-  };
+  const validateForm = () => {
+    const emailValue = loginEmail.trim();
+    const passwordValue = loginPassword.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+/;
+    const isEmailValid = emailPattern.test(emailValue);
+    const isPasswordValid = passwordValue.length >= 8;
+    setIsFormValid(isEmailValid && isPasswordValid );
+    
+    return isEmailValid && isPasswordValid;
+  }
+const handlesignin = (e) => {
+
+    e.preventDefault();
+    const isFormValid = validateForm();
+    if (isFormValid){
+
+    
+    signInWithEmailAndPassword(auth,loginEmail, loginPassword)
+    .then((userCredential)=>{
+        const user = userCredential
+        console.log('Sign in suceess:', user)
+       navigate('/image-gallery');
+
+    })
+    .catch((signInError)=> {
+        console.error('Sign-up error:', signInError);
+        setSignInError(signInError.message);
+        
+
+
+
+    })
+
+    
+}
+}
+
+const handleRegister = () => {
+  navigate('/sign');
+}
 
   return (
     <div className="app">
-      <form id="login-form">
+      <form id="login-form" onSubmit={handlesignin}>
         <div className="box">
           <h1>Login</h1>
           <div className="onyedika">
             <input
-              placeholder="Email"
+              placeholder="user@example.com"
+              required
               onChange={(event) => {
                 setLoginEmail(event.target.value);
               }}
@@ -52,12 +70,18 @@ function LoginPage() {
             <input
               type="password"
               placeholder="Password"
+              className='mt-3'
+              required
               onChange={(event) => {
                 setLoginPassword(event.target.value);
               }}
             />
-            <button id="btn" onClick={login}>Login</button>
+            <button id="btn" className='btn btn-primary ' >Login</button>
             {signInError && <p className="error-message">{signInError}</p>}
+            
+            <button className='float-end btn btn-sm btn-danger'onClick={handleRegister} >Register</button>
+         
+         
           </div>
         </div>
       </form>

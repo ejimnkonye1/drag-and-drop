@@ -2,39 +2,37 @@
 .image-gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Display three images per row */
-  gap: 46px; /* Adjust the gap between images */
+  gap: 20px -30px; /* Adjust the gap between images */
+  grid-row-gap:-30px; /* Set row gap to 0 */
+  overflow: none;
 }
 
 .image-card {
   position: relative;
-  border: 1px solid #e0e0e0;
-  background-color: #fff;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
+  
   cursor: pointer;
   overflow: hidden;
-  border-radius: 4px;
+  
+  width: 100%;
+  padding: 30px;
+}
+.image-card {
+  touch-action: none;
 }
 
-.image-card img {
-  max-width: 80%;
-  height: auto;
-  display: block;
-}
-.image-card:hover {
-  transform: scale(1.05); /* Scale up by 5% on hover */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow on hover */
-}
+
 
 .tags {
   display: flex;
+  
   flex-wrap: wrap;
   margin-top: 8px;
   padding: 4px;
+  
 }
 
 .tag {
-  background-color: #f0f0f0;
+  
   color: #333;
   font-size: 12px;
   padding: 2px 6px;
@@ -46,7 +44,45 @@
 /* Skeleton Loader Styles */
 
 
+.flip-box {
+  background-color: transparent;
+  width: 300px;
+  height: 200px;
+ 
+  perspective: 1000px;
+}
 
+.flip-box-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-box:hover .flip-box-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-box-front, .flip-box-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-box-front {
+  /* background-color: #bbb; */
+  color: black;
+}
+
+.flip-box-back {
+  background-color: #555;
+  color: white;
+  transform: rotateY(180deg);
+}
 
 .loading-spinner {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -69,11 +105,24 @@
 
 @media screen and (max-width: 768px) {
   .image-gallery {
-    grid-template-columns: repeat(1, 1fr); 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px;
+    
 
   }
-  .image-card img {
-    max-width: 80%;
+  .image-card{
+    width: 90%;
+    
+    
+   
+  }
+  .image-card .card-img-top {
+    
+ width: 100%;
+ object-fit:cover;
+  }
  
+  .flip-box{
+    width: 100%;
   }
 }

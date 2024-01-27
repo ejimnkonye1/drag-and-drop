@@ -43,10 +43,11 @@ input{
 #btn{
     background: #001E4D;
     color: #fff;
-    width: 150px;
+    width: 100px;
+    
     border: 0;
     padding: 10px;
-    border-radius: 4px;
+    border-radius: 24px;
     margin: 20px auto 0;
     cursor: pointer;
     display: block;

@@ -1,49 +1,73 @@
 import React, { useState, useEffect } from 'react';
+
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import img1 from '../images/14658084_5506971-removebg-preview.png';
-import img2 from '../images/10502634_4456268-removebg-preview.png';
-import img3 from '../images/17895513_5929339-removebg-preview.png';
-import img4 from '../images/20602852_6333050-removebg-preview.png';
-import img5 from '../images/5538959_2867045-removebg-preview.png';
-import img6 from '../images/7769819_3226836-removebg-preview.png';
-
+import { TouchBackend } from 'react-dnd-touch-backend';
+import img1 from '../images/palpa-4c1e85d5.webp';
+import img2 from '../images/star.webp';
+import img3 from '../images/obi-21c40bfa.webp';
+import img4 from '../images/maul-4121e18d.webp';
+import img5 from '../images/luke-88288006.webp';
+import img6 from '../images/ahsoka-3d651f8d.webp';
+import img9 from '../images/ff2a87b3-861f-416c-911b-c4f3bf0d06ad.jpeg';
 import SearchBar from './Searchbar';
+import Head from './head';
 
 const initialImages = [
   {
     id: '1',
     url: img1,
-    tags: ['tag1'],
+    tags: ['Palpa'],
   },
   {
     id: '2',
     url: img2,
-    tags: ['tag2'],
+    tags: ['star'],
   },
   {
     id: '3',
     url: img3,
-    tags: ['tag3'],
+    tags: ['Obi-ken'],
   },
   {
     id: '4',
     url: img4,
-    tags: ['tag4'],
+    tags: ['maul'],
   },
   {
     id: '5',
     url: img5,
-    tags: ['tag5'],
+    tags: ['luke'],
   },
   {
     id: '6',
     url: img6,
-    tags: ['tag6'],
+    tags: ['Ahsoka'],
   },
 ];
 
 const ImageCard = ({ image, index, moveImage }) => {
+  const [, ref, preview] = useDrag({
+    type: 'IMAGE',
+    item: { index },
+    options: {
+      previewOptions: {
+        anchorX: 0,
+        anchorY: 0,
+      },
+    },
+  });
+
+  const [, drop] = useDrop({
+    accept: 'IMAGE',
+    hover(draggedImage) {
+      if (draggedImage.index !== index) {
+        moveImage(draggedImage.index, index);
+        draggedImage.index = index;
+      }
+    },
+  });
+
   const handleTouchStart = (event) => {
     // Handle touch start event
     console.log('Touch start:', event.touches);
@@ -59,43 +83,46 @@ const ImageCard = ({ image, index, moveImage }) => {
     console.log('Touch end:', event.changedTouches);
   };
 
-  const [, ref] = useDrag({
-    type: 'IMAGE',
-    item: { index },
-    onTouchStart: handleTouchStart, // Add touch start event handler
-  });
-
-  const [, drop] = useDrop({
-    accept: 'IMAGE',
-    hover(draggedImage) {
-      if (draggedImage.index !== index) {
-        moveImage(draggedImage.index, index);
-        draggedImage.index = index;
-      }
-    },
-  });
-
   return (
     <div
       ref={(node) => {
         ref(drop(node));
+        preview(drop(node)); // Set the preview ref
         node?.addEventListener('touchstart', handleTouchStart);
         node?.addEventListener('touchmove', handleTouchMove);
         node?.addEventListener('touchend', handleTouchEnd);
       }}
       className="image-card"
+ 
     >
-      <img src={image.url} alt={`Image ${image.id}`} />
-      <div className="tags">
-        {image.tags.map((tag, tagIndex) => (
-          <span key={tagIndex} className="tag">
-            {tag}
-          </span>
-        ))}
+     <div class="flip-box">
+  <div class="flip-box-inner">
+    <div class="flip-box-front">
+    <img src={image.url} className="card-img-top" alt={`Image ${image.id}`}
+    style={{width:'300px' , height:'200px'}}
+    />
+    </div>
+    <div class="flip-box-back">
+    <img src={img9}
+    style={{width:'300px' , height:'200px'}} />
+    </div>
+  </div>
+</div>
+
+      <div className="card-body">
+        <div className="tags">
+          {image.tags.map((tag, tagIndex) => (
+            <span key={tagIndex} className="badge bg-primary me-1">
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
+
+
 
 const ImageGallery = () => {
   const [images, setImages] = useState(initialImages);
@@ -105,6 +132,18 @@ const ImageGallery = () => {
     const updatedImages = [...images];
     const [movedImage] = updatedImages.splice(fromIndex, 1);
     updatedImages.splice(toIndex, 0, movedImage);
+    setImages(updatedImages);
+  };
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const updatedImages = [...images];
+    const [reorderedImage] = updatedImages.splice(result.source.index, 1);
+    updatedImages.splice(result.destination.index, 0, reorderedImage);
+
     setImages(updatedImages);
   };
 
@@ -119,40 +158,30 @@ const ImageGallery = () => {
     setImages(filtered);
   };
 
+
   useEffect(() => {
-    // Simulate an API call or any asynchronous operation to fetch images
-    // For this example, we use a setTimeout to simulate loading delay
     const fakeApiCall = () => {
       setTimeout(() => {
-        setLoading(false); // Set loading to false when images are ready
-      }, 2000); // Simulate a 2-second loading time
+        setLoading(false);
+      }, 2000);
     };
 
-    // Call the fake API
     fakeApiCall();
-  }, []); // Empty dependency array ensures this effect runs only once
+  }, []);
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
       <div>
         <SearchBar onSearch={handleSearch} />
         {loading ? (
-          // Show a skeleton loader or loading spinner while images are loading
-          <div className="loading-spinner">
-            {/* You can replace this with your preferred loading indicator */}
-            Loading...
-          </div>
+          <div className="loading-spinner">Loading...</div>
         ) : (
-          // Display the image gallery when loading is false
-          <div className="image-gallery">
-            {images.map((image, index) => (
-              <ImageCard
-                key={image.id}
-                image={image}
-                index={index}
-                moveImage={moveImage}
-              />
-            ))}
+          <div className="">
+            <div className='image-gallery'>
+              {images.map((image, index) => (
+                <ImageCard key={image.id} image={image} index={index} moveImage={moveImage} />
+              ))}
+            </div>
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../Stylesheet/searchbar.css';
 import { useNavigate } from 'react-router-dom';
+import Head from './head';
 
 const SearchBar = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -22,7 +23,17 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
+    <div >
+
+
+<header>
+        <div class="brand-name">Drag and Drop</div>
+        <div className='log'>
+        <button class="logout-btn  btn btn-sm btn-danger" onClick={handleLogout} >Logout</button>
+        </div>
+    </header>
     <div className="search-bar">
+      
       <input
         type="text"
         placeholder="Search by tag"
@@ -30,7 +41,9 @@ const SearchBar = ({ onSearch }) => {
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
       />
-   <button onClick={handleLogout}>Logout</button>
+   {/* <button  className='btn btn-danger'>Logout</button> */}
+   
+    </div>
     </div>
   );
 };
